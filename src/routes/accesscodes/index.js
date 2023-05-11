@@ -3,7 +3,7 @@ const router = express.Router()
 
 const AccessCode = require('../../models/AccessCode')
 
-// GET Routes 
+// GET Routes  
 
 router.get('/isvalid', async (req, res) => {
     const {
