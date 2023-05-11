@@ -70,8 +70,8 @@ router.patch('/', async (req, res) => {
         })
 
         res.json({message: projectIDs.length > 1 ? 
-            'Successfully updated projects.'
-            : 'Successfully updated project.'
+            'Successfully updated Projects.'
+            : 'Successfully updated Project.'
         })
     } catch (error) {
         res.status(500).json({message: error.message})
@@ -94,8 +94,8 @@ router.delete('/', async (req, res) => {
         await Project.deleteMany(filter)
 
         res.json({message: projectIDs.length > 1 ?
-            'Successfully deleted projects.'
-            : 'Successfully deleted project.'
+            'Successfully deleted Projects.'
+            : 'Successfully deleted Project.'
         })
     } catch (error) {
         res.status(500).json({message: error.message})

@@ -102,7 +102,7 @@ router.post('/appannouncement', async (req, res) => {
             console.log(error)
         }
 
-        res.json({message: 'Successfully created app announcement.'})
+        res.json({message: 'Successfully created App Announcement.'})
     } catch (error) {
         console.log(error)
         res.status(500).json({message: error.message})
@@ -205,7 +205,7 @@ router.post('/emailannouncement', async (req, res) => {
             console.log(error)
         }
 
-        res.json({message: 'Successfully created app announcement.'})
+        res.json({message: 'Successfully created App Announcement.'})
     } catch (error) {
         console.log(error)
         res.status(500).json({message: error.message})

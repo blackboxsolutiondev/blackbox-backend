@@ -66,8 +66,6 @@ app.use('/admin/bugreports', adminBugReportsRoute)
 const adminFAQRoute = require('./src/routes/admin/faq')
 app.use('/admin/faq', adminFAQRoute)
 
-// Blackbox Routes
-
 const accessCodesRoute = require('./src/routes/accesscodes')
 app.use('/accesscodes', accessCodesRoute)
 
@@ -88,4 +86,4 @@ mongoose.connect(
     },
 )
 
-const server = app.listen(process.env.PORT || 4014)
+const server = app.listen(process.env.PORT || 4015)

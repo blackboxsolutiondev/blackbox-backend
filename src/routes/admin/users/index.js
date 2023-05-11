@@ -67,7 +67,7 @@ router.patch('/makeadmin', async (req, res) => {
         })
 
         if (user) {
-            res.json({message: `Successfully made user ${user.displayName} an admin.`})
+            res.json({message: `Successfully made User ${user.displayName} an admin.`})
         } else {
             throw Error('No users matched those filters.')
         }
@@ -94,7 +94,7 @@ router.patch('/removeadmin', async (req, res) => {
         })
 
         if (user) {
-            res.json({message: `Successfully removed admin user ${user.displayName}.`})
+            res.json({message: `Successfully removed Admin User ${user.displayName}.`})
         } else {
             throw Error('No users matched those filters.')
         }
@@ -122,7 +122,7 @@ router.patch('/makesuperadmin', async (req, res) => {
         })
 
         if (user) {
-            res.json({message: `Successfully made user ${user.displayName} a super admin.`})
+            res.json({message: `Successfully made User ${user.displayName} a super admin.`})
         } else {
             throw Error('No users matched those filters.')
         }

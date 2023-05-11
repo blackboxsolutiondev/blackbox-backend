@@ -156,8 +156,8 @@ router.patch('/', async (req, res) => {
 
         res.json({
             message: bugReportIDs.length > 1 ? 
-                'Successfully updated bug reports.'
-                : 'Successfully updated bug report.'
+                'Successfully updated Bug Reports.'
+                : 'Successfully updated Bug Report.'
         })
     } catch (error) {
         res.status(500).json({message: error.message})
@@ -180,8 +180,8 @@ router.delete('/', async (req, res) => {
         await BugReport.deleteMany(filter)
 
         res.json({message: bugReportIDs.length > 1 ?
-            'Successfully deleted bug reports.'
-            : 'Successfully deleted bug report.'
+            'Successfully deleted Bug Reports.'
+            : 'Successfully deleted Bug Report.'
         })
     } catch (error) {
         res.status(500).json({message: error.message})

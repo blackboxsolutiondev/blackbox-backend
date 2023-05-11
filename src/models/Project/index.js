@@ -9,6 +9,10 @@ const ProjectSchema = mongoose.Schema({
         ref: 'User',
         required: true
     },
+    creatorPhoneNumber: {
+        type: String,
+        required: true,
+    },
     projectName: {
         type: String,
         required: true

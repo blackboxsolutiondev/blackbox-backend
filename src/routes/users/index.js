@@ -192,9 +192,6 @@ router.delete('/', async (req, res) => {
     try {
         const user = await User.findOneAndDelete(filter)
 
-        console.log(JSON.stringify(
-            {user, uid, userID}
-        , null, 4))
         if (user) {
             res.json({message: 'User deleted.'})
         } else {

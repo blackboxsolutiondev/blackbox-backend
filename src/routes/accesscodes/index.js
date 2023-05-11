@@ -17,10 +17,6 @@ router.get('/isvalid', async (req, res) => {
     try {
         const accessCode = await AccessCode.findOne(filter)
             .lean()
-
-        console.log(JSON.stringify(
-            {accessCode}
-        , null, 4))
             
         res.json({
             isValid: !!accessCode
