@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 require('dotenv/config')
-const stripe = require('stripe')(process.env.STRIPE_API_KEY)
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
 const AccessCode = require('../../../models/AccessCode')
 const {PROJECT_INVOICE_IDS} = require('./constants')
