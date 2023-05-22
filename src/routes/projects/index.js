@@ -19,6 +19,7 @@ router.get('/search', async (req, res) => {
         page,
         sortby,
         pagesize = PAGE_SIZES.projects,
+        creator,
         archived,
         status=null,
         projectName=null,
@@ -26,6 +27,7 @@ router.get('/search', async (req, res) => {
     } = req.query
     const pageSize = Math.min(MAX_PAGE_SIZE, pagesize)
     const filter = {
+        creator,
         archived,
         ...(!!status ? {status} : {}),
         ...(!!projectName ? {
@@ -138,7 +140,7 @@ router.patch('/:projectID', async (req, res) => {
             .lean()
 
         if (project) {
-            res.json({message: 'Successfully updated project.'})
+            res.json({message: 'Successfully updated Project.'})
         } else {
             throw Error('No projects matched those filters.')
         }
@@ -151,10 +153,18 @@ router.patch('/:projectID', async (req, res) => {
 
 router.delete('/:projectID', async (req, res) => {
     const {projectID} = req.params
+    const {userID} = req.query
     const filter = {_id: projectID}
 
     try {
-        const project = await Project.findOneAndDelete(filter)
+        let project = await Project.findById(projectID)
+            .lean()
+            
+        if (project.creator.valueOf() !== userID) {
+            throw Error('You are not authorized to delete this project.')
+        }
+        
+        project = await Project.findOneAndDelete(filter)
             .lean()
 
         if (project) {
@@ -163,6 +173,7 @@ router.delete('/:projectID', async (req, res) => {
             throw Error('No projects matched those filters.')
         }
     } catch (error) {
+        console.log(error)
         res.status(500).json({message: error.message})
     }
 })

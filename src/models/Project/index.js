@@ -61,6 +61,14 @@ const ProjectSchema = mongoose.Schema({
         type: Number,
         required: true,
     },
+    borderRadius: {
+        type: String, // 'square' | 'rounded' | 'pill'
+        required: true,
+    },
+    buttonBorderRadius: {
+        type: String, // 'square' | 'rounded' | 'pill'
+        required: true,
+    },
     pagesText: {
         type: [String],
         required: true
@@ -81,7 +89,6 @@ const ProjectSchema = mongoose.Schema({
         }],
         required: true,
     },
-
     // optional
     customTintColor: {
         type: String,
@@ -134,6 +141,16 @@ const ProjectSchema = mongoose.Schema({
         type: String,
         required: false,
         default: '',
+    },
+    invoiceType: {
+        type: String,
+        required: false,
+        default: null,
+    },
+    invoiceID: {
+        type: String,
+        required: false,
+        default: null,
     }
 }, {timestamps: true})
 

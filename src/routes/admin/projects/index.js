@@ -1,7 +1,12 @@
 const express = require('express')
 const router = express.Router()
+require('dotenv/config')
+const stripe = require('stripe')(process.env.STRIPE_API_KEY)
 
+const AccessCode = require('../../../models/AccessCode')
+const {PROJECT_INVOICE_IDS} = require('./constants')
 const Project = require('../../../models/Project')
+const User = require('../../../models/User')
 const {MAX_PAGE_SIZE, PAGE_SIZES} = require('../../../constants')
 
 // GET Routes
@@ -65,6 +70,23 @@ router.patch('/', async (req, res) => {
     }
 
     try {
+        if (updatedFields.accessCode) {
+            const filter = {
+                code: updatedFields.accessCode,
+                claimed: false
+            }
+            
+            const accessCode = await AccessCode.find(filter)
+
+            if (accessCode) {
+                updatedFields.receivedPayment = true
+
+                await AccessCode.findOneAndUpdate(filter, {claimed: true})
+            } else {
+                throw Error('Access code is invalid.')
+            }
+        }
+
         await Project.updateMany(filter, {
             $set: updatedFields
         })
@@ -74,6 +96,60 @@ router.patch('/', async (req, res) => {
             : 'Successfully updated Project.'
         })
     } catch (error) {
+        console.log('error')
+        res.status(500).json({message: error.message})
+    }
+})
+
+router.patch('/sendinvoice', async (req, res) => {
+    const {projectType, projectID, userEmail, userID} = req.body
+
+    try {
+        let stripeCustomerID = null
+        const user = await User.findById(userID)
+
+        if (!user.stripeID) {
+            // create stripe customer
+            const customer = await stripe.customers.create({
+                email: userEmail,
+                description: `User with ID: ${userID}`
+            })
+            stripeCustomerID = customer.id
+        } else {
+            stripeCustomerID = user.stripeID
+        }
+
+        // Create an Invoice
+        const invoice = await stripe.invoices.create({
+            customer: stripeCustomerID,
+            collection_method: 'send_invoice',
+            days_until_due: 7,
+        })
+
+        // Create an Invoice Item
+        const invoiceItem = await stripe.invoiceItems.create({ 
+            customer: stripeCustomerID,
+            price: PROJECT_INVOICE_IDS[projectType],
+            invoice: invoice.id
+        })
+
+        // Send the Invoice
+        await stripe.invoices.sendInvoice(invoice.id)
+
+        // Update Project
+        const updatedProject = await Project.findByIdAndUpdate(projectID, {
+            invoiceType: projectType,
+            invoiceSent: true,
+            invoiceID: invoice.id
+        })
+
+        if (updatedProject) {
+            res.json({message: 'Invoice sent.'})
+        } else {
+            throw Error('No projects matched those filters.')
+        }
+    } catch (error) {
+        console.log('error')
         res.status(500).json({message: error.message})
     }
 })
