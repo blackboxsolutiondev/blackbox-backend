@@ -11,7 +11,7 @@ const PAGE_SIZES = {
 }
 
 // 'dev' | 'prod'
-const ENV = 'dev'
+const ENV = 'prod'
 
 module.exports = {
     MAX_PAGE_SIZE,

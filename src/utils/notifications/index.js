@@ -55,7 +55,7 @@ const postAppNotificationIfEnabled = async (
             return await postAppNotification(partialNotification, toUserWithID)
         } else {
             const {channelID} = partialNotification
-            const {channelEnabled, displayName, email} = userHasChannelNotificationsEnabled(channelID, 'app', userID)
+            const {channelEnabled, displayName, email} = getUserAndChannelNotificationSettings(channelID, 'app', userID)
             if (channelEnabled) {
                 return await postAppNotification(parialNotification, toUserWithID)
             } else {
@@ -66,7 +66,6 @@ const postAppNotificationIfEnabled = async (
         console.log(error)
         throw(error)
     }
-    return null
 }
 
 // returns : didSendNotififcation
@@ -130,9 +129,58 @@ const sendEmailNotificationIfEnabled = async (
     return null
 }
 
+const postAppNotificationToAdminUsers = async (partialNotification) => {
+    try {
+        const filter = {
+            isAdmin: true
+        }
+        const adminUsers = await User.find(filter)
+            .select('')
+            .lean()
+
+        for (let i = 0; i < adminUsers.length; i++) {
+            const {_id} = adminUsers[i]
+            try {
+                await postAppNotification(partialNotification, _id)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
+const sendEmailNotificationToAdminUsers = async (notification) => {
+    try {
+        const filter = {
+            isAdmin: true
+        }
+        const adminUsers = await User.find(filter)
+            .select('displayName email')
+            .lean()
+
+        for (let i = 0; i < adminUsers.length; i++) {
+            const {displayName, email} = adminUsers[i]
+            
+            try {
+                await sendEmailNotification(notification, displayName, email)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
 module.exports = {
     postAppNotification,
     sendEmailNotification,
     postAppNotificationIfEnabled,
-    sendEmailNotificationIfEnabled
+    sendEmailNotificationIfEnabled,
+    postAppNotificationToAdminUsers,
+    sendEmailNotificationToAdminUsers
 }

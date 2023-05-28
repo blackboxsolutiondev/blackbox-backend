@@ -10,7 +10,7 @@ const {APP_NOTIFICATIONS, EMAIL_NOTIFICATIONS} = require('./notifications')
 const {
     postAppNotification,
     sendEmailNotification
-} = require('../../utis/notifications')
+} = require('../../utils/notifications')
 
 // GET Routes
 

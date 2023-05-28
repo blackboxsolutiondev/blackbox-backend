@@ -78,6 +78,11 @@ app.use('/admin/accesscodes', adminAccessCodesRoute)
 const adminProjectsRoute = require('./src/routes/admin/projects')
 app.use('/admin/projects', adminProjectsRoute)
 
+// Services
+
+const {scheduleInvoicePaidService} = require('./src/services/project')
+scheduleInvoicePaidService()
+
 mongoose.connect(
     process.env.MONGO_DB_CONNECTION,
     {

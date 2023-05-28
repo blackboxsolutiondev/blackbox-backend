@@ -5,10 +5,10 @@ const User = require('../../../models/User')
 const Notification = require('../../../models/Notification')
 const {MAX_PAGE_SIZE, PAGE_SIZES} = require('../../../constants')
 const {APP_NOTIFICATIONS, EMAIL_NOTIFICATIONS} = require('./notifications')
-const {CHANNEL_IDS} = require('../../../utis/notifications/constants')
+const {CHANNEL_IDS} = require('../../../utils/notifications/constants')
 const {
     postAppNotification, sendEmailNotification
-} = require('../../../utis/notifications')
+} = require('../../../utils/notifications')
 
 // POST Routes
 
