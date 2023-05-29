@@ -20,7 +20,7 @@ const invoicePaidService = async () => {
             const projectID = project._id
             const {status} = await stripe.invoices.retrieve(invoiceID)
             
-            if (status === 'paid' || true) {
+            if (status === 'paid') {
                 await Project.findByIdAndUpdate(projectID, {
                     receivedPayment: true
                 })

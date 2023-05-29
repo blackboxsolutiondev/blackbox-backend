@@ -105,6 +105,26 @@ const ProjectSchema = mongoose.Schema({
         required: false,
         default: false
     },
+    linkedInURL: {
+        type: String,
+        required: false,
+        default: null
+    },
+    facebookURL: {
+        type: String,
+        required: false,
+        default: null
+    },
+    instagramURL: {
+        type: String,
+        required: false,
+        default: null
+    },
+    twitterURL: {
+        type: String,
+        required: false,
+        default: null
+    },
 
     // default
     status: {
