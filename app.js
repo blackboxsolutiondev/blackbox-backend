@@ -80,8 +80,13 @@ app.use('/admin/projects', adminProjectsRoute)
 
 // Services
 
-const {scheduleInvoicePaidService} = require('./src/services/project')
+const {
+    scheduleInvoicePaidService,
+    scheduleRevisionsEndedService,
+} = require('./src/services/project')
+
 scheduleInvoicePaidService()
+scheduleRevisionsEndedService()
 
 mongoose.connect(
     process.env.MONGO_DB_CONNECTION,

@@ -1,21 +1,18 @@
-const {getUserFirstName} = require('../../models/User/utils')
 const {CHANNEL_IDS} = require('../../utils/notifications/constants')
 
 const APP_NOTIFICATIONS = {
-    notificationID: {
-        channelID: '',
-        message: ''
-    }
+    projectCreatedAdmin: project => ({
+        channelID: CHANNEL_IDS.general,
+        message: `Project "${project.projectName}" was just created.`
+    }),
 }
 
 const EMAIL_NOTIFICATIONS = {
-    notificationID: user => ({
-        channelID: '',
-        title: '',
-        message: `
-        
-        `
-    })
+    projectCreatedAdmin: project => ({
+        channelID: CHANNEL_IDS.general,
+        subject: 'Project Created',
+        message: `Project "${project.projectName}" was just created.`
+    }),
 }
 
 module.exports = {

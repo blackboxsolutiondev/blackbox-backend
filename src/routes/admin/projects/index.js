@@ -2,12 +2,15 @@ const express = require('express')
 const router = express.Router()
 require('dotenv/config')
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+const moment = require('moment')
 
 const AccessCode = require('../../../models/AccessCode')
 const {PROJECT_INVOICE_IDS} = require('./constants')
 const Project = require('../../../models/Project')
 const User = require('../../../models/User')
 const {MAX_PAGE_SIZE, PAGE_SIZES} = require('../../../constants')
+const {APP_NOTIFICATIONS, EMAIL_NOTIFICATIONS} = require('./notifications')
+const {postAppNotification, sendEmailNotification} = require('../../../utils/notifications')
 
 // GET Routes
 
@@ -85,6 +88,20 @@ router.patch('/', async (req, res) => {
             } else {
                 throw Error('Access code is invalid.')
             }
+        }
+        if (updatedFields.revisionsLocked == false) {
+            updatedFields.revisionsUnlockedAt = moment().toISOString()
+
+            const project = await Project.findById(projectIDs[0])
+                .select('projectName creator')
+                .populate('creator', 'displayName email _id')
+                .lean()
+
+            const appNotification = APP_NOTIFICATIONS.revisionsPeriodBegan(project)
+            const emailNotification = EMAIL_NOTIFICATIONS.revisionsPeriodBegan(project)
+
+            await postAppNotification(appNotification, project.creator._id)
+            await sendEmailNotification(emailNotification, project.creator.displayName, project.creator.email)
         }
 
         await Project.updateMany(filter, {

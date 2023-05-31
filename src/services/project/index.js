@@ -1,7 +1,15 @@
+const moment = require('moment')
+
 const Project = require('../../models/Project')
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
-const {postAppNotificationToAdminUsers, sendEmailNotificationToAdminUsers} = require('../../utils/notifications')
+const {
+    postAppNotification,
+    sendEmailNotification,
+    postAppNotificationToAdminUsers,
+    sendEmailNotificationToAdminUsers
+} = require('../../utils/notifications')
 const {APP_NOTIFICATIONS, EMAIL_NOTIFICATIONS} = require('./notifications')
+const {PROJECT_STATUSES} = require('../../models/Project/constants')
 
 const invoicePaidService = async () => {
     try {
@@ -48,6 +56,49 @@ const scheduleInvoicePaidService = () => {
     setInterval(invoicePaidService, 60*1000)
 }
 
+const revisionsEndedService = async () => {
+    const filter = {
+        status: PROJECT_STATUSES.inReview,
+        revisionsLocked: false
+    }
+
+    try {
+        const projects = await Project.find(filter)
+            .select('projectName revisionsUnlockedAt creator')
+            .populate('creator', 'email displayName _id')
+            .lean()
+
+        for (let i = 0; i < projects.length; i++) {
+            const project = projects[i]
+            const revisionsStartDate = moment(project.revisionsUnlockedAt)
+            const revisionsEndDate = revisionsStartDate.clone().add(10, 'days').endOf('day')
+            const currentDate = moment()
+
+            if (currentDate.isAfter(revisionsEndDate)) {
+                await Project.findByIdAndUpdate(project._id, {
+                    revisionsLocked: true
+                })
+
+                const adminAppNotification = APP_NOTIFICATIONS.revisionsPeriodEndedAdmin(project)
+                const adminEmailNotification = EMAIL_NOTIFICATIONS.revisionsPeriodEndedAdmin(project)
+                const userAppNotification = APP_NOTIFICATIONS.revisionsPeriodEnded(project)
+                const userEmailNotification = EMAIL_NOTIFICATIONS.revisionsPeriodEnded(project)
+
+                await postAppNotificationToAdminUsers(adminAppNotification)
+                await sendEmailNotificationToAdminUsers(adminEmailNotification)
+                await postAppNotification(userAppNotification, project.creator._id)
+                await sendEmailNotification(userEmailNotification, project.creator.displayName, project.creator.email)
+            }
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const scheduleRevisionsEndedService = () => {
+    setInterval(revisionsEndedService, 60*60*1000)
+}
 module.exports = {
-    scheduleInvoicePaidService
+    scheduleInvoicePaidService,
+    scheduleRevisionsEndedService
 }

@@ -4,7 +4,8 @@ const router = express.Router()
 const AccessCode = require('../../models/AccessCode')
 const Project = require('../../models/Project')
 const {MAX_PAGE_SIZE, PAGE_SIZES} = require('../../constants')
-const {APP_NOTIFICATIONS} = require('./notifications')
+const {APP_NOTIFICATIONS, EMAIL_NOTIFICATIONS} = require('./notifications')
+const {postAppNotificationToAdminUsers, sendEmailNotificationToAdminUsers} = require('../../utils/notifications')
 
 // GET Routes
 
@@ -114,6 +115,12 @@ router.post('/', async (req, res) => {
             message: 'Project created.',
             projectID: project._id
         })
+
+        const appNotification = APP_NOTIFICATIONS.projectCreatedAdmin(project)
+        const emailNotification = EMAIL_NOTIFICATIONS.projectCreatedAdmin(project)
+
+        await postAppNotificationToAdminUsers(appNotification)
+        await sendEmailNotificationToAdminUsers(emailNotification)
     } catch (error) {
         res.status(500).json({message: error.message})
     }

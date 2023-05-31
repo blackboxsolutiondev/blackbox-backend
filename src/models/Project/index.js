@@ -162,6 +162,11 @@ const ProjectSchema = mongoose.Schema({
         required: false,
         default: '',
     },
+    revisionsUnlockedAt: {
+        type: Date,
+        required: false,
+        default: null,
+    },
     invoiceType: {
         type: String,
         required: false,
@@ -171,7 +176,7 @@ const ProjectSchema = mongoose.Schema({
         type: String,
         required: false,
         default: null,
-    }
+    },
 }, {timestamps: true})
 
 ProjectSchema.index(
