@@ -1,3 +1,5 @@
+require('dotenv/config')
+
 const MAX_PAGE_SIZE = 50
 
 const PAGE_SIZES = {
@@ -13,8 +15,11 @@ const PAGE_SIZES = {
 // 'dev' | 'prod'
 const ENV = 'prod'
 
+const STRIPE_SECRET_KEY = ENV === 'dev' ? process.env.TEST_STRIPE_SECRET_KEY : process.env.LIVE_STRIPE_SECRET_KEY
+
 module.exports = {
     MAX_PAGE_SIZE,
     PAGE_SIZES,
-    ENV
+    ENV,
+    STRIPE_SECRET_KEY
 }
