@@ -13,7 +13,7 @@ const PAGE_SIZES = {
 }
 
 // 'dev' | 'prod'
-const ENV = 'prod'
+const ENV = 'dev'
 
 const STRIPE_SECRET_KEY = ENV === 'dev' ? process.env.TEST_STRIPE_SECRET_KEY : process.env.LIVE_STRIPE_SECRET_KEY
 

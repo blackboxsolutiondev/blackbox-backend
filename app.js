@@ -78,6 +78,9 @@ app.use('/admin/accesscodes', adminAccessCodesRoute)
 const adminProjectsRoute = require('./src/routes/admin/projects')
 app.use('/admin/projects', adminProjectsRoute)
 
+const contactUsRoute = require('./src/routes/contactus')
+app.use('/contact-us', contactUsRoute)
+
 // Services
 
 const {

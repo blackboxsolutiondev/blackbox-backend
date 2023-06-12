@@ -1,7 +1,7 @@
 const moment = require('moment')
 
 const Project = require('../../models/Project')
-const {STRIPE_SECRET_KEY} = require('../../../constants')
+const {STRIPE_SECRET_KEY} = require('../../constants')
 const stripe = require('stripe')(STRIPE_SECRET_KEY)
 const {
     postAppNotification,

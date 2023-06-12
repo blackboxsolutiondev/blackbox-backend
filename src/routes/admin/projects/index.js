@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router()
-require('dotenv/config')
 const {STRIPE_SECRET_KEY} = require('../../../constants')
 const stripe = require('stripe')(STRIPE_SECRET_KEY)
 const moment = require('moment')
