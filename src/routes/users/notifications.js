@@ -18,6 +18,11 @@ const EMAIL_NOTIFICATIONS = {
         subject: `${process.env.SITE_NAME}: Temporary Password`,
         message: `Your temporary password is:\n\n\t${password}`
     }),
+    userCreatedAdmin: {
+        channelID: CHANNEL_IDS.general,
+        subject: 'User Created',
+        message: 'A new user was created on Blackbox Solution.'
+    }
 }
 
 module.exports = {

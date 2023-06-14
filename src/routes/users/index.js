@@ -9,7 +9,8 @@ const {MAX_PAGE_SIZE, PAGE_SIZES, ENV} = require('../../constants')
 const {APP_NOTIFICATIONS, EMAIL_NOTIFICATIONS} = require('./notifications')
 const {
     postAppNotification,
-    sendEmailNotification
+    sendEmailNotification,
+    sendEmailNotificationToAdminUsers
 } = require('../../utils/notifications')
 
 // GET Routes
@@ -113,6 +114,12 @@ router.post('/', async (req, res) => {
 
         try {
             await sendEmailNotification(EMAIL_NOTIFICATIONS.welcomeToSite, user.displayName, user.email)
+        } catch (error) {
+            console.log(error)
+        }
+
+        try {
+            await sendEmailNotificationToAdminUsers(EMAIL_NOTIFICATIONS.userCreatedAdmin)
         } catch (error) {
             console.log(error)
         }
