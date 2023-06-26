@@ -25,6 +25,10 @@ const ProjectSchema = mongoose.Schema({
         type: [String],
         required: false
     },
+    projectDomainURL: {
+        type: String,
+        required: true,
+    },
     domainProviderURL: {
         type: String,
         required: true
